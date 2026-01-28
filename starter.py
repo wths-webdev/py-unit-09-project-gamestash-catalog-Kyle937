@@ -1,3 +1,15 @@
+
+import time
+import random
+import os
+import sys
+
+def clear_terminal():
+    if sys.platform.startswith('win32'):
+        os.system('cls')
+    else:
+        os.system('clear')
+clear_terminal()
 games = {
     "GTA V": 2013,
     "Ratchet & Clank": 2021,
@@ -10,22 +22,40 @@ games = {
 }
 
 # get_inventory_count(): Returns how many total games there are in a readable format.
-    
+def inventory():
+    slot = 1
+    for item in games:
+        slot +=1
+    print("there are " + slot + " games")
 
 # add_game(title, year): Adds a game to the inventory.
-
+def addGame(title, year):
+    games.update({title: year})
 
 # remove_game(title): Removes a game from the inventory.
-
-
+def removeGame(title):
+    if title in games:
+        games.pop(title)
+        print(title + " was removed successfully.")
+    else:
+        print(title + " is not in the list")
 # display_inventory()
-
+def showInventory():
+    slot = 1
+    for item in games:
+        print(slot, item)
+        slot +=1
 
 # search_year(year)
-
+def searchYear(year):
+    print(f"All games from {year}:")
+    for game in games:
+        if games[game] == year:
+            print(f"   {game}")
 
 # search_title(title)
-
+def searchTitle(title):
+    print(title, "was made in",games[title])
 
 
 # Welcome message
@@ -41,6 +71,7 @@ print(" _____________________________  \n"
     "\\_____________________________/")
 
 while True:
+    clear_terminal()
     # Display menu to user
     print()
     print("----------- Menu ----------")
@@ -51,7 +82,7 @@ while True:
     print("Search for a title (title)")
     print("Quit (q)\n")
     user_selection = input("What would you like to do? ").lower()
-
+    clear_terminal()
     # Use conditional statements to call functions based on user input
     if user_selection == "add":
         print("What game would you like to add?")
@@ -59,37 +90,34 @@ while True:
         year = input("Year released: ")
 
         # update() will add to the dictionary if the key does not exist
-        games.update({title: year})
+        addGame(title, year)
 
     elif user_selection == "remove":
-        game = input("What title would you like to remove? ")
+        if len(games) > 0:
+            game = input("What title would you like to remove? ")
 
-        games.pop(title)
-        print(title + " was removed successfully.")
+            removeGame(game)
     
     elif user_selection == "show":
-        # function 1:
-        print("There are " + str(len(games)) + " games in your inventory.")
-
-        # function 2:
-        count = 1
-        for game in games:
-            # for key in games, games[key] returns the value
-            print(f"   {str(count)}. {game} by {games[game]}")
-            count += 1
-        print()
+        if len(games)>0:
+            print("There are " + str(len(games)) + " games in your inventory.")
+            showInventory()
+        else:
+            print("there is currently no games in the list")
 
     elif user_selection == "year":
-        year = int(input("Which year would you like to seach for? "))
+        if len(games)>0:
+            year = int(input("Which year would you like to seach for? "))
 
-        print(f"All games from {year}:")
-        for game in games:
-            if games[game] == year:
-                print(f"   {game}")
-
+            searchYear(year)
+        else:
+            print("theres no games currently")
     elif user_selection == "title":
-        title = input("Which title would you like to search for? ")
-
+        if len(games)>0:
+            title = input("Which title would you like to search for? ")
+            searchTitle(title)
+        else:
+            print("there are no games currently")
     elif user_selection == "q":
         print("Bye bye!")
         break # out of the loop
